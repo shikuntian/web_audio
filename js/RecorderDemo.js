@@ -10,7 +10,7 @@
 
     URL = window.URL || window.webkitURL;
 
-    audioContext = new AudioContext;
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
     if (audioContext.createScriptProcessor == null) {
         audioContext.createScriptProcessor = audioContext.createJavaScriptNode;
@@ -106,7 +106,7 @@
 
     audioInLevel = audioContext.createGain();
 
-    audioInLevel.gain.value = 0;
+    audioInLevel.gain.value = 1;
 
     mixer = audioContext.createGain();
 
@@ -116,7 +116,7 @@
 
     audioInLevel.connect(mixer);
 
-    mixer.connect(audioContext.destination);
+    //mixer.connect(audioContext.destination);
 
     audioRecorder = new WebAudioRecorder(mixer, {
         workerDir: 'web-audio-recorder-js/lib-minified/',
@@ -143,6 +143,7 @@
     });
 
     onGotDevices = function (devInfos) {
+        console.log(devInfos);
         var index, info, name, options, _i, _len;
         options = '<option value="no-input" selected>(No input)</option>';
         index = 0;
@@ -274,6 +275,7 @@
     $encoding.on('click', function (event) {
         var encoding, option;
         encoding = $(event.target).attr('encoding');
+        console.log(encoding);
         audioRecorder.setEncoding(encoding);
         option = ENCODING_OPTION[encoding];
         $('#encoding-option-label').html(option.label);
@@ -358,7 +360,8 @@
         $dateTime.html((new Date).toString());
         sec = audioRecorder.recordingTime() | 0;
         $timeDisplay.html("" + (minSecStr(sec / 60 | 0)) + ":" + (minSecStr(sec % 60)));
-        if(sec==20){
+        //根据时间切割
+        if (sec == 20) {
             stopRecording(true);
             startRecording();
         }
