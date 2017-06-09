@@ -21,9 +21,10 @@
         partitionSecond = 60//默认分割时间
         ;
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-
+    var tt = function() {
+        console.log('xxx');
+    };
     URL = window.URL || window.webkitURL;
-
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
     if (audioContext.createScriptProcessor == null) {
@@ -58,6 +59,7 @@
     audioRecorder = new WebAudioRecorder(audioInLevel, {
         workerDir: 'web-audio-recorder-js/lib-minified/'
     });
+    console.log(audioRecorder.__proto__.hasOwnProperty('setOptions'));
     audioRecorder.setEncoding('mp3');
     startRecording = function () {
         $recording.removeClass('hidden');
